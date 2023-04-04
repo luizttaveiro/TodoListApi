@@ -48,15 +48,20 @@ namespace Todo_API2.Presentation.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(long id, TodoItemDTO todoItemDTO)
         {
+            var item = await _service.GetByIdAsync(id);
+            if(item == null)
+            {
+                return NotFound();
+            }
             await _service.UpdateAsync(id, todoItemDTO);
             return NoContent();
         }
 
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<TodoItemDTO>> DeleteAsync(long id)
         {
